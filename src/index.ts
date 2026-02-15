@@ -1,6 +1,4 @@
 import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
 import {
   createAgentPlugin,
   type AgentFetchContext,
@@ -8,9 +6,10 @@ import {
   type SessionParseOptions,
   type SessionUsageData,
 } from '@tokentop/plugin-sdk';
-
-// TODO: Implement session parsing for Claude Code
-// See @tokentop/agent-opencode for a complete reference implementation.
+import { CACHE_TTL_MS, SESSION_AGGREGATE_CACHE_MAX, sessionAggregateCache, sessionCache, sessionMetadataIndex } from './cache.ts';
+import { parseSessionsFromProjects } from './parser.ts';
+import { CLAUDE_CODE_HOME, CLAUDE_CODE_PROJECTS_PATH } from './paths.ts';
+import { RECONCILIATION_INTERVAL_MS, startActivityWatch, stopActivityWatch } from './watcher.ts';
 
 const claudeCodeAgentPlugin = createAgentPlugin({
   id: 'claude-code',
@@ -33,24 +32,43 @@ const claudeCodeAgentPlugin = createAgentPlugin({
   agent: {
     name: 'Claude Code',
     command: 'claude',
-    configPath: path.join(os.homedir(), '.claude'),
-    sessionPath: path.join(os.homedir(), '.claude', 'projects'),
+    configPath: CLAUDE_CODE_HOME,
+    sessionPath: CLAUDE_CODE_PROJECTS_PATH,
   },
 
   capabilities: {
-    sessionParsing: false,
+    sessionParsing: true,
     authReading: false,
-    realTimeTracking: false,
+    realTimeTracking: true,
     multiProvider: false,
   },
 
-  async isInstalled(_ctx: PluginContext): Promise<boolean> {
-    return fs.existsSync(path.join(os.homedir(), '.claude'));
+  startActivityWatch(_ctx: PluginContext, callback): void {
+    startActivityWatch(callback);
   },
 
-  async parseSessions(_options: SessionParseOptions, _ctx: AgentFetchContext): Promise<SessionUsageData[]> {
-    return [];
+  stopActivityWatch(_ctx: PluginContext): void {
+    stopActivityWatch();
+  },
+
+  async isInstalled(_ctx: PluginContext): Promise<boolean> {
+    return fs.existsSync(CLAUDE_CODE_PROJECTS_PATH) || fs.existsSync(CLAUDE_CODE_HOME);
+  },
+
+  async parseSessions(options: SessionParseOptions, ctx: AgentFetchContext): Promise<SessionUsageData[]> {
+    return parseSessionsFromProjects(options, ctx);
   },
 });
+
+export {
+  CACHE_TTL_MS,
+  CLAUDE_CODE_HOME,
+  CLAUDE_CODE_PROJECTS_PATH,
+  RECONCILIATION_INTERVAL_MS,
+  SESSION_AGGREGATE_CACHE_MAX,
+  sessionAggregateCache,
+  sessionCache,
+  sessionMetadataIndex,
+};
 
 export default claudeCodeAgentPlugin;
