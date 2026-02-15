@@ -1,11 +1,9 @@
 name: Publish to npm
 
-# DISABLED: Auto-publish disabled until agent has real implementation.
-# Uncomment the push trigger when ready to release.
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       dry_run:
@@ -53,6 +51,9 @@ jobs:
 
       - name: Typecheck
         run: bun run typecheck
+
+      - name: Test
+        run: bun test
 
       - name: Semantic release
         run: |
