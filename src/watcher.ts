@@ -41,7 +41,7 @@ const activityWatcher: ActivityWatcherState = {
 
 export let forceFullReconciliation = false;
 
-function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEntry {
+export function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEntry {
   if (!entry || typeof entry !== 'object') return false;
 
   const candidate = entry as Partial<ClaudeCodeAssistantEntry>;
@@ -61,7 +61,7 @@ function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEn
   return true;
 }
 
-function toTimestamp(value: string | undefined): number {
+export function toTimestamp(value: string | undefined): number {
   if (!value) return Date.now();
   const parsed = Date.parse(value);
   return Number.isFinite(parsed) ? parsed : Date.now();

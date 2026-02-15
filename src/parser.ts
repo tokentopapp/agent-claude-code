@@ -22,13 +22,13 @@ interface ClaudeEntryWithCwd {
   cwd?: string;
 }
 
-function toTimestamp(value: string | undefined, fallback: number): number {
+export function toTimestamp(value: string | undefined, fallback: number): number {
   if (!value) return fallback;
   const parsed = Date.parse(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEntry {
+export function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEntry {
   if (!entry || typeof entry !== 'object') return false;
 
   const candidate = entry as Partial<ClaudeCodeAssistantEntry>;
@@ -50,7 +50,7 @@ function isTokenBearingAssistant(entry: unknown): entry is ClaudeCodeAssistantEn
   return true;
 }
 
-function extractSlug(entries: unknown[]): string | undefined {
+export function extractSlug(entries: unknown[]): string | undefined {
   for (let i = entries.length - 1; i >= 0; i--) {
     const entry = entries[i] as Partial<{ slug: string | null }>;
     if (typeof entry.slug === 'string' && entry.slug.length > 0) {
@@ -60,7 +60,7 @@ function extractSlug(entries: unknown[]): string | undefined {
   return undefined;
 }
 
-function parseSessionFileRows(sessionId: string, mtimeMs: number, entries: unknown[]): SessionUsageData[] {
+export function parseSessionFileRows(sessionId: string, mtimeMs: number, entries: unknown[]): SessionUsageData[] {
   const deduped = new Map<string, SessionUsageData>();
   const projectPath = extractProjectPath(entries as ClaudeEntryWithCwd[]);
   const sessionName = extractSlug(entries);
@@ -75,7 +75,7 @@ function parseSessionFileRows(sessionId: string, mtimeMs: number, entries: unkno
       providerId: 'anthropic',
       modelId: entry.message.model,
       tokens: {
-        input: input_tokens + cache_read_input_tokens + cache_creation_input_tokens,
+        input: input_tokens,
         output: output_tokens,
       },
       timestamp: toTimestamp(entry.timestamp, mtimeMs),
