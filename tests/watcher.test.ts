@@ -8,11 +8,11 @@ import {
   stopActivityWatch,
   sessionWatcher,
   RECONCILIATION_INTERVAL_MS,
-} from './watcher.ts';
+} from '../src/watcher.ts';
 import {
   isTokenBearingAssistant as parserIsTokenBearing,
-} from './parser.ts';
-import type { ClaudeCodeAssistantEntry } from './types.ts';
+} from '../src/parser.ts';
+import type { ClaudeCodeAssistantEntry } from '../src/types.ts';
 
 function makeAssistantEntry(overrides?: {
   id?: string;

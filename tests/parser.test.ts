@@ -4,8 +4,8 @@ import {
   toTimestamp,
   extractSlug,
   parseSessionFileRows,
-} from './parser.ts';
-import type { ClaudeCodeAssistantEntry } from './types.ts';
+} from '../src/parser.ts';
+import type { ClaudeCodeAssistantEntry } from '../src/types.ts';
 
 function makeAssistantEntry(overrides?: {
   id?: string;

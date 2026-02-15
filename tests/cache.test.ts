@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
-import { evictSessionAggregateCache, sessionAggregateCache, SESSION_AGGREGATE_CACHE_MAX } from './cache.ts';
+import { evictSessionAggregateCache, sessionAggregateCache, SESSION_AGGREGATE_CACHE_MAX } from '../src/cache.ts';
 
 beforeEach(() => {
   sessionAggregateCache.clear();

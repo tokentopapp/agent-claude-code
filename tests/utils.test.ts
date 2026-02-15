@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { decodeProjectDirName, extractProjectPath } from './utils.ts';
+import { decodeProjectDirName, extractProjectPath } from '../src/utils.ts';
 
 describe('decodeProjectDirName', () => {
   test('decodes leading-dash path to absolute path', () => {

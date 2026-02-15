@@ -21,7 +21,7 @@ bun run build:types          # tsc --emitDeclarationOnly
 bun run build:js             # bun build → dist/
 bun run typecheck            # tsc --noEmit (strict)
 bun test                     # Run all tests (bun test runner)
-bun test src/parser.test.ts  # Run a single test file
+bun test tests/parser.test.ts  # Run a single test file
 bun test --watch             # Watch mode
 ```
 
@@ -38,6 +38,11 @@ src/
 ├── cache.ts      # Cache state, TTL, eviction
 ├── utils.ts      # JSONL reader, path decoding
 └── watcher.ts    # FSWatcher for session + activity tracking
+tests/
+├── parser.test.ts
+├── cache.test.ts
+├── utils.test.ts
+└── watcher.test.ts
 ```
 
 ## TypeScript Configuration
@@ -193,6 +198,6 @@ Optional scope in parentheses. Breaking changes use `!` suffix before colon.
 ## Testing
 
 - Test runner: `bun test` (Bun's built-in test runner)
-- Test files: `*.test.ts` (excluded from tsconfig compilation, picked up by bun test)
-- Place test files adjacent to source: `src/parser.test.ts`
-- No tests exist yet — this is a gap to be filled
+- Test files: `*.test.ts` in `tests/` directory (excluded from tsconfig compilation, picked up by bun test)
+- Place test files in `tests/`: `tests/parser.test.ts`
+- Imports use relative paths back to source: `import { foo } from '../src/foo.ts'`
